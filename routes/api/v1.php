@@ -7,8 +7,6 @@
  */
 
 
-Route::get('/login', function (){
-    dd(12);
-});
+Route::post('/login', 'AuthController@index');
 
 Route::get('/index', 'AuthController@index');

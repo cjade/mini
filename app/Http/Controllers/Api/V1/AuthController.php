@@ -5,6 +5,8 @@
  * Date: 2018/6/24
  * Time: 下午4:48
  */
+
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Api\ApiController;
@@ -18,9 +20,13 @@ class AuthController extends ApiController
      *
      * @apiParam {Number} id 任务ID
      * @apiParam {Number} [page] 页数
-     * @apiParam {Number} [perpage] 每页的条数
+     * @apiParam {Number} [perpage] 每页的条数s
+     *
+     * @apiUse UserNotFoundError
      */
     public function index(){
         return '12';
     }
 }
+
+
