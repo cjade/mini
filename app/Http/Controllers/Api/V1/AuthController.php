@@ -11,5 +11,16 @@ use App\Http\Controllers\Api\ApiController;
 
 class AuthController extends ApiController
 {
-
+    /**
+     * * @api {get} /test 接口测试
+     * @apiDescription 根据ID（id）获取列表信息
+     * @apiGroup access
+     *
+     * @apiParam {Number} id 任务ID
+     * @apiParam {Number} [page] 页数
+     * @apiParam {Number} [perpage] 每页的条数
+     */
+    public function index(){
+        return '12';
+    }
 }

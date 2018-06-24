@@ -6,6 +6,9 @@
  * Time: 下午4:55
  */
 
+
 Route::get('/login', function (){
     dd(12);
 });
+
+Route::get('/index', 'AuthController@index');

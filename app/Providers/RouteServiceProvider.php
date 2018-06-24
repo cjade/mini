@@ -57,7 +57,7 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Define the "api" routes for the application.
+     * Define the "doc" routes for the application.
      *
      * These routes are typically stateless.
      *
@@ -66,10 +66,10 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::group(
-            ['middleware' => 'api', 'as' => config('config.api_prefix'), 'namespace' => $this->namespace . '\Api', 'domain' => config('config.api_prefix') . '.' . config('config.domain')],
+            ['middleware' => 'doc', 'as' => config('config.api_prefix'), 'namespace' => $this->namespace . '\Api', 'domain' => config('config.api_prefix') . '.' . config('config.domain')],
             function () {
                 foreach (config('config.api_version') as $version) {
-                    Route::prefix(strtolower($version))->namespace(strtoupper($version))->group(base_path('routes/api/' . strtoupper($version) . '.php'));
+                    Route::prefix(strtolower($version))->namespace(strtoupper($version))->group(base_path('routes/doc/' . strtoupper($version) . '.php'));
                 }
             }
         );
