@@ -66,7 +66,7 @@ class RouteServiceProvider extends ServiceProvider
     protected function mapApiRoutes()
     {
         Route::group(
-            ['middleware' => 'doc', 'as' => config('config.api_prefix'), 'namespace' => $this->namespace . '\Api', 'domain' => config('config.api_prefix') . '.' . config('config.domain')],
+            ['middleware' => 'api', 'as' => config('config.api_prefix'), 'namespace' => $this->namespace . '\Api', 'domain' => config('config.api_prefix') . '.' . config('config.domain')],
             function () {
                 foreach (config('config.api_version') as $version) {
                     Route::prefix(strtolower($version))->namespace(strtoupper($version))->group(base_path('routes/api/' . strtoupper($version) . '.php'));

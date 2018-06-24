@@ -10,3 +10,4 @@
 Route::post('/login', 'AuthController@index');
 
 Route::get('/index', 'AuthController@index');
+Route::get('/index1', 'AuthController@index1');

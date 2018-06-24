@@ -25,7 +25,14 @@ class AuthController extends ApiController
      * @apiUse UserNotFoundError
      */
     public function index(){
-        return '12';
+        session('index','asd');
+        return session()->getId();
+    }
+
+    public function index1(){
+        $aa = session('index');
+        dd($aa);
+        return $aa;
     }
 }
 
