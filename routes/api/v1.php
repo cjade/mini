@@ -6,8 +6,7 @@
  * Time: 下午4:55
  */
 
-
-Route::post('/login', 'AuthController@index');
-
-Route::get('/index', 'AuthController@index');
-Route::get('/index1', 'AuthController@index1');
+Route::post('login', 'AuthController@login');
+Route::post('logout', 'AuthController@logout');
+Route::post('refresh', 'AuthController@refresh');
+Route::post('me', 'AuthController@me');
