@@ -9,7 +9,10 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Exceptions\ApiException;
 use App\Http\Controllers\Api\ApiController;
+use App\Utils\Utils;
+use Illuminate\Http\Request;
 
 class AuthController extends ApiController
 {
@@ -29,10 +32,10 @@ class AuthController extends ApiController
         return session()->getId();
     }
 
-    public function index1(){
-        $aa = session('index');
-        dd($aa);
-        return $aa;
+    public function index1(Request $request){
+        throw new ApiException(Utils::UserNotFound);
+
+        return response()->json('12')->setStatusCode(201);
     }
 }
 

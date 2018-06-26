@@ -12,5 +12,8 @@ return [
     'domain'      => env('APP_URL'),//域名
     'api_version' => [ //接口版本
         'v1'
-    ]
+    ],
+    'ClientTypes' => [  //允许的X-MC-Client-Type
+        'miniprogram' => '小程序',
+    ],
 ];
