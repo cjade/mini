@@ -1,5 +1,6 @@
 <?php
 /**
+ * 账号模块
  * Created by PhpStorm.
  * User: Jade
  * Date: 2018/6/24
@@ -15,20 +16,11 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Support\Facades\Hash;
-use App\Service\SnsUser as SNS;
+use App\Exceptions\ApiException;
+use App\Utils\Utils;
 
 class AuthController extends ApiController
 {
-
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //        $this->middleware('auth:api', ['except' => ['login']]);
-    }
 
     /**
      * @api {get} /test 接口测试
@@ -48,9 +40,12 @@ class AuthController extends ApiController
     }
 
     /**
-     * Get a JWT via given credentials.
+     * @api {post} /login 登录
+     * @apiDescription 账号密码登录
+     * @apiGroup access
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @apiParam {String} sns_type 第三方类型
+     *
      */
     public function login(AuthorizationRequest $request)
     {
@@ -61,11 +56,10 @@ class AuthController extends ApiController
 
         $credentials['password'] = $request->password;
         if (!$token = Auth::guard('api')->attempt($credentials)) {
-            return response()->json('用户名或密码错误');
+            throw new ApiException(Utils::UserNotFound);
+//            return response()->json('用户名或密码错误');
         }
-
-
-        return SNS::respondWithToken($token)->setStatusCode(201);
+        return Utils::respondWithToken($token)->setStatusCode(201);
     }
 
     /**
@@ -75,14 +69,12 @@ class AuthController extends ApiController
      *
      * @apiParam {String} sns_type 第三方类型
      *
-     * @param Request $request
-     * @return $this
      */
     public function snsLogin($sns_type, Request $request)
     {
         $user = User::find(1);
         $token = Auth::guard('api')->fromUser($user);
-        return SNS::respondWithToken($token)->setStatusCode(201);
+        return Utils::respondWithToken($token)->setStatusCode(201);
     }
 
 }

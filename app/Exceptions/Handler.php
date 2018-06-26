@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 
 class Handler extends ExceptionHandler
 {
@@ -13,7 +14,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //
+        //xxxxxx
     ];
 
     /**
@@ -29,10 +30,10 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $exception
+     * @param  \Exception $exception
      * @return void
      */
-    public function report(Exception $exception)
+    public function report (Exception $exception)
     {
         parent::report($exception);
     }
@@ -40,12 +41,44 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $exception
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Exception               $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render ($request, Exception $exception)
     {
-        return parent::render($request, $exception);
+//        if (config('app.debug')) return parent::render($request, $exception);
+
+        return $this->handle($request, $exception);
+    }
+
+    // 新添加的handle函数
+    public function handle ($request, Exception $e)
+    {
+
+        $type = $request->header('X-MC-Client-Type');
+//        if (!in_array($type, config('config.ClientTypes'))) {
+//            return response()->json('X-MC-Client-Type');
+//        }
+
+        // 只处理自定义的APIException异常
+        if ($e instanceof ApiException) {
+            list($message, $code) = explode('-', $e->getMessage());
+            $result = [
+                "message"     => $message,
+                "status_code" => $e->getCode() ?: $code,
+            ];
+            return response()->json($result);
+        }
+
+        if ($e instanceof ValidationException) {
+            $errors = $e->errors();
+            $result = [
+                "message"     => $e->getMessage(),
+                "status_code" => $e->getCode(),
+            ];
+            return response()->json($errors);
+        }
+        return parent::render($request, $e);
     }
 }

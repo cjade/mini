@@ -28,4 +28,17 @@ class AuthorizationRequest extends FormRequest
             'password' => 'required|string|min:6',
         ];
     }
+
+    /**
+     * 获取已定义的验证规则的错误消息。
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'user_name.required' => '账号不能为空',
+            'password.required'  => '密码不能为空',
+        ];
+    }
 }
