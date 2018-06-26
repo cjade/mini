@@ -9,8 +9,13 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Http\Requests\Api\AuthorizationRequest;
+use App\Models\SnsUser;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends ApiController
 {
@@ -22,7 +27,7 @@ class AuthController extends ApiController
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+//        $this->middleware('auth:api', ['except' => ['login']]);
     }
     /**
      * * @api {get} /test 接口测试
@@ -36,8 +41,8 @@ class AuthController extends ApiController
      * @apiUse UserNotFoundError
      */
     public function index(){
-        session('index','asd');
-        return session()->getId();
+        $aa = Hash::make('123456');
+        return $aa;
     }
 
     /**
@@ -45,17 +50,38 @@ class AuthController extends ApiController
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+    public function login(AuthorizationRequest $request)
     {
-        $credentials = array(
-            'user_id' => $request->input('user_id')
-        );
+        $username = $request->user_name;
+        filter_var($username, FILTER_VALIDATE_EMAIL) ?
+            $credentials['user_email'] = $username :
+            $credentials['user_phone'] = $username;
 
-        if (! $token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        $credentials['password'] = $request->password;
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
+            return response()->json('用户名或密码错误');
         }
 
-        return $token;
+
+        return $this->respondWithToken($token)->setStatusCode(201);
+    }
+
+    public function socialStore($type, Request $request)
+    {
+
+        $user = User::find(1);
+
+        $token = Auth::guard('api')->fromUser($user);
+        return $this->respondWithToken($token)->setStatusCode(201);
+    }
+
+    protected function respondWithToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
+        ]);
     }
 }
 
