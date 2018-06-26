@@ -7,7 +7,6 @@
  * Time: 下午4:48
  */
 
-
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\AuthorizationRequest;
@@ -23,7 +22,7 @@ class AuthController extends ApiController
 {
 
     /**
-     * @api {get} /test 接口测试
+     * @api {get} /index 接口测试
      * @apiDescription 根据ID（id）获取列表信息
      * @apiGroup accesss
      *
@@ -44,7 +43,8 @@ class AuthController extends ApiController
      * @apiDescription 账号密码登录
      * @apiGroup access
      *
-     * @apiParam {String} sns_type 第三方类型
+     * @apiParam {String} user_name 账号
+     * @apiParam {String} password 密码
      *
      */
     public function login(AuthorizationRequest $request)
@@ -56,8 +56,8 @@ class AuthController extends ApiController
 
         $credentials['password'] = $request->password;
         if (!$token = Auth::guard('api')->attempt($credentials)) {
-            throw new ApiException(Utils::UserNotFound);
-//            return response()->json('用户名或密码错误');
+            //            throw new ApiException(Utils::UserNotFound);
+            return response()->json('用户名或密码错误');
         }
         return Utils::respondWithToken($token)->setStatusCode(201);
     }
@@ -67,14 +67,31 @@ class AuthController extends ApiController
      * @apiDescription 第三方登录
      * @apiGroup access
      *
+     * @apiParam {String} code  code
      * @apiParam {String} sns_type 第三方类型
      *
      */
     public function snsLogin($sns_type, Request $request)
     {
-        $user = User::find(1);
+        $user  = User::find(1);
         $token = Auth::guard('api')->fromUser($user);
         return Utils::respondWithToken($token)->setStatusCode(201);
+    }
+
+    public function refresh(){
+        $token = Auth::guard('api')->refresh();
+        return Utils::respondWithToken($token);
+    }
+
+    public function logout()
+    {
+        Auth::guard('api')->logout();
+        return response()->json('success');
+    }
+
+    public function me(){
+        $me = Auth::guard('api')->user();
+        return response()->json($me);
     }
 
 }
