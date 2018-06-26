@@ -10,12 +10,12 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\AuthorizationRequest;
-use App\Models\SnsUser;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
 use Illuminate\Support\Facades\Hash;
+use App\Service\SnsUser as SNS;
 
 class AuthController extends ApiController
 {
@@ -27,10 +27,11 @@ class AuthController extends ApiController
      */
     public function __construct()
     {
-//        $this->middleware('auth:api', ['except' => ['login']]);
+        //        $this->middleware('auth:api', ['except' => ['login']]);
     }
+
     /**
-     * * @api {get} /test 接口测试
+     * @api {get} /test 接口测试
      * @apiDescription 根据ID（id）获取列表信息
      * @apiGroup accesss
      *
@@ -40,7 +41,8 @@ class AuthController extends ApiController
      *
      * @apiUse UserNotFoundError
      */
-    public function index(){
+    public function index()
+    {
         $aa = Hash::make('123456');
         return $aa;
     }
@@ -63,26 +65,26 @@ class AuthController extends ApiController
         }
 
 
-        return $this->respondWithToken($token)->setStatusCode(201);
+        return SNS::respondWithToken($token)->setStatusCode(201);
     }
 
-    public function socialStore($type, Request $request)
+    /**
+     * @api {post} /login/{sns_type} 第三方登录
+     * @apiDescription 第三方登录
+     * @apiGroup access
+     *
+     * @apiParam {String} sns_type 第三方类型
+     *
+     * @param Request $request
+     * @return $this
+     */
+    public function snsLogin($sns_type, Request $request)
     {
-
         $user = User::find(1);
-
         $token = Auth::guard('api')->fromUser($user);
-        return $this->respondWithToken($token)->setStatusCode(201);
+        return SNS::respondWithToken($token)->setStatusCode(201);
     }
 
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'Bearer',
-            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
-        ]);
-    }
 }
 
 

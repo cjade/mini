@@ -7,7 +7,7 @@
  */
 
 Route::post('login', 'AuthController@login');
-Route::post('login/{type}', 'AuthController@socialStore');
+Route::post('login/{sns_type}', 'AuthController@snsLogin');
 
 Route::post('logout', 'AuthController@logout');
 Route::post('refresh', 'AuthController@refresh');
