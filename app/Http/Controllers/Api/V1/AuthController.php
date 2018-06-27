@@ -14,7 +14,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
-use Illuminate\Support\Facades\Hash;
 use App\Exceptions\ApiException;
 use App\Utils\Utils;
 
@@ -31,11 +30,11 @@ class AuthController extends ApiController
      * @apiParam {Number} [page] 页数
      * @apiParam {Number} [perpage] 每页的条数s
      *
-     * @apiUse UserNotFoundError
+     * @apiUse InvalidToken
      */
     public function index()
     {
-                    throw new ApiException(10001);
+        return response()->json('12');
     }
 
     /**
@@ -45,9 +44,22 @@ class AuthController extends ApiController
      * @apiGroup accountGroup
      * @apiPermission    none
      *
-     * @apiParam {String} user_name 账号
-     * @apiParam {String} password 密码
+     * @apiParam {String} user_name 账号[邮箱或手机号]
+     * @apiParam {String{6..30}} password 密码
      *
+     * @apiSuccess {String} access_token token
+     * @apiSuccess {String} token_type 类型
+     * @apiSuccess {Integer} expires_in 过期时间
+     *
+     * @apiSuccessExample Success-Response:
+     *     HTTP/1.1 200 OK
+     *     {
+     *      "access_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9hcGlkZXYubWNvby5tZVwvdjFcL2xvZ2luXC93ZWl4aW4iLCJpYXQiOjE1MzAxMDAyODAsImV4cCI6MTUzMDEwNzQ4MCwibmJmIjoxNTMwMTAwMjgwLCJqdGkiOiJSd2dRY1NzUTdBSXhra2lWIiwic3ViIjoxLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.twxp1_P0QM4LGbT8tkcNuS10pc66H1VwFwUK1zLaDt0",
+     *      "token_type": "Bearer",
+     *      "expires_in": 7200
+     *     }
+     *
+     * @apiUse  ValidationError
      */
     public function login(AuthorizationRequest $request)
     {
@@ -72,13 +84,23 @@ class AuthController extends ApiController
      * @apiPermission    none
      *
      * @apiParam {String} code  code
-     * @apiParam {String} sns_type 第三方类型
+     * @apiParam {String{weixin,miniprogram,qq,weibo}} sns_type 第三方类型
+     *
+     * @apiErrorExample {json} Error-Response:
+     *     HTTP/1.1 403 Not Found
+     *     {
+     *       "code": "UserNotFound",
+     *       "message": "第三方类型错误"
+     *     }
      *
      */
     public function snsLogin($sns_type, Request $request)
     {
+        if (!in_array($sns_type, config('config.sns_type'))) {
+            throw new ApiException(Utils::UserNotFound);
+        }
         $user  = User::find(1);
-        $token = Auth::guard('api')->fromUser($user);
+        $token = Utils::getToken($user);
         return Utils::respondWithToken($token)->setStatusCode(201);
     }
 
@@ -89,9 +111,10 @@ class AuthController extends ApiController
      * @apiGroup accountGroup
      * @apiPermission    token
      *
-     *
+     * @apiUse InvalidToken
      */
-    public function refresh(){
+    public function refresh()
+    {
         $token = Auth::guard('api')->refresh();
         return Utils::respondWithToken($token);
     }
@@ -103,7 +126,7 @@ class AuthController extends ApiController
      * @apiGroup accountGroup
      * @apiPermission    token
      *
-     *
+     * @apiUse InvalidToken
      */
     public function logout()
     {
@@ -112,17 +135,23 @@ class AuthController extends ApiController
     }
 
     /**
-     * @api {put} /me 获取用户信息
+     * @api {get} /me 获取用户信息
      * @apiVersion       1.0.0
-     * @apiDescription 获取登录登录信息
+     * @apiDescription 获取用户登录信息
      * @apiGroup accountGroup
      * @apiPermission    token
      *
-     *
+     * @apiUse InvalidToken
      */
-    public function me(){
-        $me = Auth::guard('api')->user();
-        return response()->json($me);
+    public function me()
+    {
+        $user = Auth::guard('api')->user();
+        $user['meta'] = [
+            'access_token' => Auth::guard('api')->fromUser($user),
+            'token_type' => 'Bearer',
+            'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
+        ];
+        return Utils::response($user);
     }
 
 }

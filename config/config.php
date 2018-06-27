@@ -16,4 +16,10 @@ return [
     'ClientTypes' => [  //允许的X-MC-Client-Type
         'miniprogram' => '小程序',
     ],
+    'sns_type'    => [//第三方类型(1：微信；2：小程序；3：qq；4：微博)
+        'weixin'      => 1,
+        'miniprogram' => 2,
+        'qq'          => 3,
+        'weibo'       => 4
+    ]
 ];

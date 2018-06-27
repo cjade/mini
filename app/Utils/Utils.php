@@ -18,11 +18,6 @@ class Utils
     const NotFound     = '请求的资源不存在-404';
 
 
-    public static function response ()
-    {
-
-    }
-
     /**
      * 第三方登录获取jwt token
      * @param $token
@@ -35,5 +30,23 @@ class Utils
             'token_type' => 'Bearer',
             'expires_in' => Auth::guard('api')->factory()->getTTL() * 60
         ]);
+    }
+
+    /**
+     * 返回json数据
+     * @param $data
+     * @return $this
+     */
+    public static function response($data){
+        return response()->json($data)->header('Content-Type', 'application/json');
+    }
+
+    /**
+     * 获取token
+     * @param $user
+     * @return mixed
+     */
+    public static function getToken($user){
+        return $token = Auth::guard('api')->fromUser($user);
     }
 }
