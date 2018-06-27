@@ -13,6 +13,11 @@ class ApiController extends Controller
 {
 
 }
+/**
+ * @apiDefine accountGroup 帐号相关
+ * 用户登录、注册、登出、第三方绑定、获取用户信息等
+ *
+ */
 
 /**
  * @apiDefine UserNotFoundError

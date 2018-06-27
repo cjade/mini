@@ -23,8 +23,9 @@ class AuthController extends ApiController
 
     /**
      * @api {get} /index 接口测试
+     * @apiVersion       1.0.0
      * @apiDescription 根据ID（id）获取列表信息
-     * @apiGroup accesss
+     * @apiGroup accountGroup
      *
      * @apiParam {Number} id 任务ID
      * @apiParam {Number} [page] 页数
@@ -40,8 +41,9 @@ class AuthController extends ApiController
 
     /**
      * @api {post} /login 登录
+     * @apiVersion       1.0.0
      * @apiDescription 账号密码登录
-     * @apiGroup access
+     * @apiGroup accountGroup
      *
      * @apiParam {String} user_name 账号
      * @apiParam {String} password 密码
@@ -64,8 +66,9 @@ class AuthController extends ApiController
 
     /**
      * @api {post} /login/{sns_type} 第三方登录
+     * @apiVersion       1.0.0
      * @apiDescription 第三方登录
-     * @apiGroup access
+     * @apiGroup accountGroup
      *
      * @apiParam {String} code  code
      * @apiParam {String} sns_type 第三方类型
