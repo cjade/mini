@@ -35,8 +35,7 @@ class AuthController extends ApiController
      */
     public function index()
     {
-        $aa = Hash::make('123456');
-        return $aa;
+                    throw new ApiException(10001);
     }
 
     /**
@@ -44,6 +43,7 @@ class AuthController extends ApiController
      * @apiVersion       1.0.0
      * @apiDescription 账号密码登录
      * @apiGroup accountGroup
+     * @apiPermission    none
      *
      * @apiParam {String} user_name 账号
      * @apiParam {String} password 密码
@@ -69,6 +69,7 @@ class AuthController extends ApiController
      * @apiVersion       1.0.0
      * @apiDescription 第三方登录
      * @apiGroup accountGroup
+     * @apiPermission    none
      *
      * @apiParam {String} code  code
      * @apiParam {String} sns_type 第三方类型
@@ -81,17 +82,44 @@ class AuthController extends ApiController
         return Utils::respondWithToken($token)->setStatusCode(201);
     }
 
+    /**
+     * @api {put} /refresh 刷新token
+     * @apiVersion       1.0.0
+     * @apiDescription 刷新token
+     * @apiGroup accountGroup
+     * @apiPermission    token
+     *
+     *
+     */
     public function refresh(){
         $token = Auth::guard('api')->refresh();
         return Utils::respondWithToken($token);
     }
 
+    /**
+     * @api {delete} /logout 退出登录
+     * @apiVersion       1.0.0
+     * @apiDescription 退出登录
+     * @apiGroup accountGroup
+     * @apiPermission    token
+     *
+     *
+     */
     public function logout()
     {
         Auth::guard('api')->logout();
         return response()->json('success');
     }
 
+    /**
+     * @api {put} /me 获取用户信息
+     * @apiVersion       1.0.0
+     * @apiDescription 获取登录登录信息
+     * @apiGroup accountGroup
+     * @apiPermission    token
+     *
+     *
+     */
     public function me(){
         $me = Auth::guard('api')->user();
         return response()->json($me);

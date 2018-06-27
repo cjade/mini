@@ -6,5 +6,7 @@
  * Time: 上午11:21
  */
 
-echo printf('%.2f',
-    50000 / 1000);
+$str =  'dsd ds ds';
+echo filter_var($str,FILTER_CALLBACK,['options'=> function() use($str) {
+    return str_replace(" ", "_", $str);
+}]);

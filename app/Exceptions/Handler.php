@@ -63,12 +63,13 @@ class Handler extends ExceptionHandler
 
         // 只处理自定义的APIException异常
         if ($e instanceof ApiException) {
+            dd($e);
             list($message, $code) = explode('-', $e->getMessage());
             $result = [
                 "message"     => $message,
                 "status_code" => $e->getCode() ?: $code,
             ];
-            return response()->json($result);
+            return response()->json($result)->setStatusCode($code);
         }
 
         if ($e instanceof ValidationException) {
@@ -77,7 +78,7 @@ class Handler extends ExceptionHandler
                 "message"     => $e->getMessage(),
                 "status_code" => $e->getCode(),
             ];
-            return response()->json($errors);
+            return response()->json($errors)->header('Content-Type', 'application/json');
         }
         return parent::render($request, $e);
     }
