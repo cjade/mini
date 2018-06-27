@@ -145,7 +145,7 @@ class AuthController extends ApiController
      */
     public function me()
     {
-        $user = Auth::guard('api')->user();
+        $user = Utils::getUser();
         $user['meta'] = [
             'access_token' => Auth::guard('api')->fromUser($user),
             'token_type' => 'Bearer',

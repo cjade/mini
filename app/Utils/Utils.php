@@ -49,4 +49,12 @@ class Utils
     public static function getToken($user){
         return $token = Auth::guard('api')->fromUser($user);
     }
+
+    /**
+     * 获取用户信息
+     * @return mixed
+     */
+    public static function getUser(){
+        return Auth::guard('api')->user();
+    }
 }
