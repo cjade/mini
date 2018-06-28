@@ -11,7 +11,7 @@ class AuthorizationRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize ()
     {
         return true;
     }
@@ -21,11 +21,11 @@ class AuthorizationRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules ()
     {
         return [
             'user_name' => 'required|string',
-            'password' => 'required|string|min:6',
+            'password'  => 'required|string|min:6',
         ];
     }
 
@@ -34,11 +34,12 @@ class AuthorizationRequest extends FormRequest
      *
      * @return array
      */
-    public function messages()
+    public function messages ()
     {
         return [
             'user_name.required' => '账号不能为空',
             'password.required'  => '密码不能为空',
+            'password.min'       => '密码长度必须大于等于6',
         ];
     }
 }

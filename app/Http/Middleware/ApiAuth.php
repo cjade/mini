@@ -10,16 +10,16 @@ class ApiAuth
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Closure                 $next
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle ($request, Closure $next)
     {
-        if(Auth::guard('api')->check()){
-            return $next($request);
+        //判断用户是否登录
+        if (!Auth::guard('api')->check()) {
+            return jsonError(InvalidToken);
         }
-//        dd(12);
         return $next($request);
     }
 }

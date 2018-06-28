@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -16,7 +17,7 @@ class Handler extends ExceptionHandler
      * @var array
      */
     protected $dontReport = [
-        //xxxxxx
+        ModelNotFoundException::class,
     ];
 
     /**
@@ -35,7 +36,7 @@ class Handler extends ExceptionHandler
      * @param  \Exception $exception
      * @return void
      */
-    public function report(Exception $exception)
+    public function report (Exception $exception)
     {
         parent::report($exception);
     }
@@ -44,56 +45,57 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request $request
-     * @param  \Exception $exception
+     * @param  \Exception               $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $exception)
+    public function render ($request, Exception $exception)
     {
         //        if (config('app.debug')) return parent::render($request, $exception);
 
         return $this->handle($request, $exception);
     }
 
-    // 新添加的handle函数
-    public function handle($request, Exception $e)
+    /**
+     * 异常检测处理
+     * @param           $request
+     * @param Exception $e
+     * @return $this|\Symfony\Component\HttpFoundation\Response
+     */
+    public function handle ($request, Exception $e)
     {
         $type = $request->header('X-MC-Client-Type');
-        //        if (!in_array($type, config('config.ClientTypes'))) {
-        //            return response()->json('X-MC-Client-Type');
-        //        }
+        if (!in_array($type, config('config.ClientTypes'))) {
 
-        // 只处理自定义的APIException异常
-        if ($e instanceof ApiException) {
-            list($message, $code) = explode('-', $e->getMessage());
-            $result = [
-                "message"     => $message,
-                "status_code" => $e->getCode() ?: $code,
-            ];
-            return response()->json($result)->setStatusCode($code);
+            return jsonError(ValidationError, 'X-MC-Client-Type不被允许');
         }
 
-        $this->isToken($e);
+
+        //token过期
+        if ($e instanceof TokenExpiredException) {
+            return jsonError(Unauthorized);
+        }
+
+        //token错误
+        if ($e instanceof JWTException) {
+            return jsonError(InvalidToken);
+        }
+
+        //提交数据验证
+        if ($e instanceof ValidationException) {
+            $errors = $e->validator->errors();
+            return jsonError(ValidationError, '', $errors);
+        }
+
+        //Api异常
+        if ($e instanceof ApiException) {
+            dd($e->getPrevious());
+            dd($e);
+            return jsonError($e->getMessage());
+        }
 
         return parent::render($request, $e);
     }
 
 
-    public function isToken(Exception $e)
-    {
-        $result = [
-            "message"     => '',
-            "status_code" => 401,
-        ];
-        //token过期
-        if ($e instanceof TokenExpiredException) {
-            $result['message'] = $e->getMessage();
-            return response()->json($result)->header('Content-Type', 'application/json');
-        }
 
-        //token错误
-        if ($e instanceof JWTException) {
-            $result['message'] = $e->getMessage();
-            return response()->json($result)->header('Content-Type', 'application/json');
-        }
-    }
 }
