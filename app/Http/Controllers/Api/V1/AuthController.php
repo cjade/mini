@@ -101,7 +101,7 @@ class AuthController extends ApiController
      * @apiParam {String} code  code
      * @apiParam {String="weixin","miniprogram","qq","weibo"}} sns_type 第三方类型
      *
-     * @apiErrorExample {json} Error-Response:
+     * @apiErrorExample {json} SnsNotFound:
      *     HTTP/1.1 403 Forbidden
      *     {
      *       "code": "SnsNotFound",

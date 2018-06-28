@@ -64,8 +64,7 @@ class Handler extends ExceptionHandler
     public function handle ($request, Exception $e)
     {
         $type = $request->header('X-MC-Client-Type');
-        if (!in_array($type, config('config.ClientTypes'))) {
-
+        if (!in_array($type, array_keys(config('config.ClientTypes')))) {
             return jsonError(ValidationError, 'X-MC-Client-Type不被允许');
         }
 
