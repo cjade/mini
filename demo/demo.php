@@ -6,7 +6,29 @@
  * Time: 上午11:21
  */
 
-$str =  'dsd ds ds';
-echo filter_var($str,FILTER_CALLBACK,['options'=> function() use($str) {
-    return str_replace(" ", "_", $str);
-}]);
+class Power
+{
+    /**
+     * @var 能力值
+     */
+    protected $ability;
+
+    /**
+     * @var 能力范围
+     */
+    protected $range;
+
+    public function __construct ($ability, $range)
+    {
+        $this->ability = $ability;
+        $this->range   = $range;
+    }
+}
+
+class Superman{
+    protected $power;
+    public function __construct ()
+    {
+        $this->power = new Power(999,100);
+    }
+}

@@ -34,9 +34,9 @@ class AuthController extends ApiController
      *
      * @apiUse           InvalidToken
      */
-    public function index ()
+    public function index ($code)
     {
-        throw new ApiException(InvalidToken);
+        return response()->json()->setStatusCode($code);
     }
 
     /**
@@ -69,7 +69,7 @@ class AuthController extends ApiController
      *
      * @apiUse            ValidationError
      * @apiErrorExample {json} InvalidAccountOrPassword:
-     *     HTTP/1.1 404 Unprocessable Entity
+     *     HTTP/1.1 404 Not Found
      *     {
      *       "code": "InvalidAccountOrPassword",
      *       "message": "账号或密码错误"

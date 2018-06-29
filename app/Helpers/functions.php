@@ -22,6 +22,7 @@ const NotFound                 = 'NotFound';    //请求的资源不存在
 const SnsNotFound              = 'SnsNotFound';    //请求的第三方类型不存在
 const AccountNotExist          = 'AccountNotExist';    //账号不存在
 
+define('APP',['code'=>'InvalidToken','message'=>'未登录，请登录','statusCode'=>401]);
 
 if (!function_exists('jsonSuccess')) {
     /**

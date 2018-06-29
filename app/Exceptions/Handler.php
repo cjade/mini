@@ -87,8 +87,9 @@ class Handler extends ExceptionHandler
 
         //Api异常
         if ($e instanceof ApiException) {
-            dd($e->getPrevious());
-            dd($e);
+            if (!empty($e->getCode())) {
+                return jsonError($e->getMessage(),'',$e->getCode());
+            }
             return jsonError($e->getMessage());
         }
 

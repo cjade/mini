@@ -15,8 +15,8 @@ Route::delete('logout', 'AuthController@logout');
 //需登录
 Route::middleware(['auth.api'])->group(function () {
     Route::get('me', 'AuthController@me');
-    Route::get('index', 'AuthController@index');
 });
+Route::get('code/{code}', 'AuthController@index');
 
 
 
