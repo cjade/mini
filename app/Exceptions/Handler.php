@@ -85,14 +85,6 @@ class Handler extends ExceptionHandler
             return jsonError(ValidationError, '', $errors);
         }
 
-        //Api异常
-        if ($e instanceof ApiException) {
-            if (!empty($e->getCode())) {
-                return jsonError($e->getMessage(),'',$e->getCode());
-            }
-            return jsonError($e->getMessage());
-        }
-
         return parent::render($request, $e);
     }
 

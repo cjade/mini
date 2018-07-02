@@ -36,6 +36,8 @@ class AuthController extends ApiController
      */
     public function index ($code)
     {
+        $body = ['red', 'blue'];
+        throw new ApiException(NotFound, $body);
         return response()->json()->setStatusCode($code);
     }
 
@@ -92,11 +94,11 @@ class AuthController extends ApiController
     }
 
     /**
-     * @api              {post} /login/{sns_type} 第三方登录
-     * @apiVersion       1.0.0
-     * @apiDescription   第三方登录
-     * @apiGroup         accountGroup
-     * @apiPermission    none
+     * @api               {post} /login/{sns_type} 第三方登录
+     * @apiVersion        1.0.0
+     * @apiDescription    第三方登录
+     * @apiGroup          accountGroup
+     * @apiPermission     none
      *
      * @apiParam {String} code  code
      * @apiParam {String="weixin","miniprogram","qq","weibo"}} sns_type 第三方类型
@@ -128,13 +130,13 @@ class AuthController extends ApiController
     }
 
     /**
-     * @api              {put} /refresh 刷新token
-     * @apiVersion       1.0.0
-     * @apiDescription   刷新token
-     * @apiGroup         accountGroup
-     * @apiPermission    token
+     * @api               {put} /refresh 刷新token
+     * @apiVersion        1.0.0
+     * @apiDescription    刷新token
+     * @apiGroup          accountGroup
+     * @apiPermission     token
      *
-     * @apiUse           InvalidToken
+     * @apiUse            InvalidToken
      *
      * @apiSuccessExample 正确响应:
      *     HTTP/1.1 201 OK
@@ -152,11 +154,11 @@ class AuthController extends ApiController
     }
 
     /**
-     * @api              {delete} /logout 退出登录
-     * @apiVersion       1.0.0
-     * @apiDescription   退出登录
-     * @apiGroup         accountGroup
-     * @apiPermission    token
+     * @api                {delete} /logout 退出登录
+     * @apiVersion         1.0.0
+     * @apiDescription     退出登录
+     * @apiGroup           accountGroup
+     * @apiPermission      token
      *
      * @apiSuccessExample  正确响应:
      *     HTTP/1.1 204 No Content
