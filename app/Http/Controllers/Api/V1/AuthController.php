@@ -36,9 +36,9 @@ class AuthController extends ApiController
      */
     public function index ($code)
     {
-        $body = ['red', 'blue'];
-        throw new ApiException(NotFound, $body);
-        return response()->json()->setStatusCode($code);
+        $body = [1=>'red', 2=>'blue'];
+//        throw new ApiException(NotFound, $body);
+        return jsonSuccess($body, $code);
     }
 
     /**
