@@ -6,6 +6,8 @@
  * Time: 上午11:21
  */
 
+ini_set('date.timezone','Asia/Shanghai');
+
 class Power
 {
     /**
@@ -63,6 +65,10 @@ $qq  = array(
     3192 => '3873482',
 );
 $dd = array();
-$aa  = [1, 2, 3];
-$bb  = [12, 1];
-var_export(strtotime(date("Y-m-d",strtotime("-1 day"))));
+if(!in_array(1,$dd)){
+    echo 123;
+}
+echo date('Y-m-d H:i:s').PHP_EOL;
+usleep(500000);
+echo date('Y-m-d H:i:s').PHP_EOL;
+
