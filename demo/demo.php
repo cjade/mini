@@ -6,69 +6,33 @@
  * Time: 上午11:21
  */
 
-ini_set('date.timezone','Asia/Shanghai');
+ini_set('date.timezone', 'Asia/Shanghai');
 
-class Power
+class A
 {
-    /**
-     * @var 能力值
-     */
-    protected $ability;
+    public        $a;
+    public static $b;
 
-    /**
-     * @var 能力范围
-     */
-    protected $range;
-
-    public function __construct ($ability, $range)
+    function add ($a)
     {
-        $this->ability = $ability;
-        $this->range   = $range;
+        $this->a = $a;
+        return $this;
     }
-}
 
-class Superman
-{
-    protected $power;
-
-    public function __construct ()
+    function setA ()
     {
-        $this->power = new Power(999, 100);
+        $this->a = strtolower($this->a);
+        return $this;
     }
+
+    function getA ()
+    {
+        return $this->a;
+    }
+
 }
 
-$data = [
-    [
-        'order_id' => 1,
-        'user_id'  => 1,
-    ], [
-        'order_id' => 2,
-        'user_id'  => 2,
-    ]
-];
+$a = new A();
+echo $a->add('adADf')->setA()->getA();
 
-$res = [
-    [
-        'order_id' => 1,
-        'user_id'  => 1,
-    ], [
-        'order_id' => 2,
-        'user_id'  => 2,
-    ]
-];
-$qq  = array(
-    3187 => '3873464',
-    3188 => '3873465',
-    3189 => '3873472',
-    3190 => '3873473',
-    3191 => '3873481',
-    3192 => '3873482',
-);
-$dd = array();
-if(!in_array(1,$dd)){
-    echo 123;
-}
-echo date('Y-m-d H:i:s').PHP_EOL;
-usleep(500000);
-echo date('Y-m-d H:i:s').PHP_EOL;
 

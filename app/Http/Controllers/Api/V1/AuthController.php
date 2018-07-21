@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Requests\Api\AuthorizationRequest;
 use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Api\ApiController;
@@ -21,6 +22,14 @@ use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 
 class AuthController extends ApiController
 {
+    public $request;
+    public $userRepository;
+
+    public function __construct (Request $request, UserRepository $userRepository)
+    {
+        $this->request = $request;
+        $this->userRepository = $userRepository;
+    }
 
     /**
      * @api              {get} /index 接口测试
@@ -36,7 +45,14 @@ class AuthController extends ApiController
      */
     public function index ($code)
     {
-        $body = [1=>'red', 2=>'blue'];
+//        $data = $this->userRepository->getById([2,1]);
+        $data = $this->userRepository->queryByAttributes();
+        dump($data->toArray());
+
+        return view('welcome');
+//        $data = $this->request->path();
+        dd($data->toArray());
+        $body = [1 => 'red', 2 => 'blue'];
 //        throw new ApiException(NotFound, $body);
         return jsonSuccess($body, $code);
     }
