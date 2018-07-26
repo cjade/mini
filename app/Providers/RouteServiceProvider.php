@@ -69,6 +69,7 @@ class RouteServiceProvider extends ServiceProvider
             ['middleware' => 'api', 'as' => config('config.api_prefix'), 'namespace' => $this->namespace . '\Api', 'domain' => config('config.api_prefix') . '.' . config('config.domain')],
             function () {
                 foreach (config('config.api_version') as $version) {
+                    dd(base_path('routes/api/' . strtolower($version) . '.php'));
                     Route::prefix(strtolower($version))->namespace(strtoupper($version))->group(base_path('routes/api/' . strtolower($version) . '.php'));
                 }
             }
