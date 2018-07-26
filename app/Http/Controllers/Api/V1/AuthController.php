@@ -45,6 +45,7 @@ class AuthController extends ApiController
      */
     public function index ($code)
     {
+        echo phpinfo();
 //        $data = $this->userRepository->getById([2,1]);
         $data = $this->userRepository->queryByAttributes();
         dump($data->toArray());
