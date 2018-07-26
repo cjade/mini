@@ -8,7 +8,7 @@
  */
 
 return [
-    'api_prefix'  => env('API_PREFIX', 'doc'),//api域名前缀
+    'api_prefix'  => env('API_PREFIX', 'api'),//api域名前缀
     'domain'      => env('APP_URL'),//域名
     'api_version' => [ //接口版本
         'v1'
