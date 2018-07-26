@@ -13,4 +13,5 @@ npm-debug.log
 yarn-error.log
 .env
 dump.rdb
+composer.lock
 120.25.194.138.sh
