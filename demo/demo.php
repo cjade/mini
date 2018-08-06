@@ -121,9 +121,18 @@ class Fork
 }
 
 $a = new A();
+$redis = new Redis();
+echo phpinfo();
 
 //echo $a->add('adADf')->setA()->getA();
 
 
 //$f = new Fork();
 $i = 10;
+echo "初始: ".memory_get_usage()."B\n";
+echo $allPage = ceil(10/3);
+echo "使用: ".memory_get_usage()."B\n";
+$allPage = null;
+echo '123';
+echo "使用: ".memory_get_usage()."B\n";
+
