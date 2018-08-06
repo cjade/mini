@@ -134,5 +134,6 @@ echo $allPage = ceil(10/3);
 echo "使用: ".memory_get_usage()."B\n";
 $allPage = null;
 echo '123';
+
 echo "使用: ".memory_get_usage()."B\n";
 
