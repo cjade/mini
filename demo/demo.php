@@ -6,6 +6,8 @@
  * Time: 上午11:21
  */
 
+declare(strict_types=1);
+
 ini_set('date.timezone', 'Asia/Shanghai');
 
 class A
@@ -52,13 +54,13 @@ class Fork
 
         //创建管道
         $pipePath = "/tmp/test.pipe";
-        if( !file_exists( $pipePath ) ){
-            if( !posix_mkfifo( $pipePath, 0666 ) ){
+        if (!file_exists($pipePath)) {
+            if (!posix_mkfifo($pipePath, 0666)) {
                 exit('make pipe false!' . PHP_EOL);
             }
         }
 
-        $nums = 0 ;
+        $nums = 0;
         while (true) {
             $processid = pcntl_fork();
             if ($processid == -1) {
@@ -67,50 +69,50 @@ class Fork
             } elseif ($processid) {
                 $task++;
                 $currentProcessid = posix_getpid(); //当前进程的Id
-                $parentProcessid = posix_getppid(); // 父级进程的ID
-                $phpProcessid = getmypid(); //当前php进程的id
-                echo "父-task:",$task,"\n";
+                $parentProcessid  = posix_getppid(); // 父级进程的ID
+                $phpProcessid     = getmypid(); //当前php进程的id
+                echo "父-task:", $task, "\n";
 
-                $file = fopen( $pipePath, 'r' );
-                stream_set_blocking( $file, False );  //设置成读取非阻塞
-                $is = (int)fread( $file, 20 );
+                $file = fopen($pipePath, 'r');
+                stream_set_blocking($file, False);  //设置成读取非阻塞
+                $is   = (int)fread($file, 20);
                 $nums += $is;
                 echo $nums;
                 fclose($file);
 
                 //控制进程数
-                if($task >= $processNumLimit) {
+                if ($task >= $processNumLimit) {
                     echo "wait chl start！\n";
                     $exitid = pcntl_wait($status); //等待退出
-                    echo "wait chl end！extid:",$exitid,"\tstatus:",$status,"\n";
+                    echo "wait chl end！extid:", $exitid, "\tstatus:", $status, "\n";
                 }
 
                 //任务总量控制
-                if($task >= $taskNum) {
+                if ($task >= $taskNum) {
                     echo "taskNum enough！$nums \n";
                     unlink($pipePath);
                     break;
                 }
-            }else {
+            } else {
                 //模拟不同任务的不同执行时长
                 $sleep = rand(1, 5);
 
                 $currentProcessid = posix_getpid(); //当前进程的Id
-                $parentProcessid = posix_getppid(); // 父级进程的ID
-                $phpProcessid = getmypid(); //当前php进程的id
+                $parentProcessid  = posix_getppid(); // 父级进程的ID
+                $phpProcessid     = getmypid(); //当前php进程的id
 //                echo "task:",$task,"\tprocessid:",$processid,"\tcurrentProcessid:",$currentProcessid,"\tparentProcessid:",$parentProcessid,"\tphpProcessid:",$phpProcessid,"\tsleep:",$sleep,"\tbegin!\n";
 
                 sleep($sleep);
 
-                $i = 0 ;
-                foreach ($arrs[$task] as $v){
+                $i = 0;
+                foreach ($arrs[$task] as $v) {
                     $i++;
                 }
-                $file = fopen( $pipePath, 'w' );
-                fwrite( $file, $i);
+                $file = fopen($pipePath, 'w');
+                fwrite($file, $i);
                 fclose($file);
 
-                echo "task:",$task."\n";
+                echo "task:", $task . "\n";
 
                 exit(0); //子进程执行完后退出，防止进入循环创建子进程
             }
@@ -120,20 +122,33 @@ class Fork
 
 }
 
-$a = new A();
-$redis = new Redis();
-echo phpinfo();
 
+class Cache
+{
+    public $redis;
+
+    public function __construct ()
+    {
+        $this->redis = new Redis();
+        $this->redis->connect('127.0.0.1', 6379);
+    }
+
+    public function set (string $key, string $val, int $ttl = 60)
+    {
+        $this->redis->select(1);
+        $this->redis->set($key, $val, $ttl);
+    }
+}
+
+echo "初始: " . memory_get_usage() . "B\n";
+//$a = new A();
 //echo $a->add('adADf')->setA()->getA();
 
+//$redis = new Cache();
+//$redis->set('aa', '1');
 
-//$f = new Fork();
-$i = 10;
-echo "初始: ".memory_get_usage()."B\n";
-echo $allPage = ceil(10/3);
-echo "使用: ".memory_get_usage()."B\n";
-$allPage = null;
-echo '123';
 
-echo "使用: ".memory_get_usage()."B\n";
 
+$goods_price = 275.000;
+
+echo $rewardPrice = round($goods_price * 0.95, 2);
