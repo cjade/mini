@@ -120,10 +120,57 @@ class Fork
 
 }
 
-$a = new A();
+/**
+ * 单列模式 操作Redis
+ * Class Cache
+ */
+class Cache{
+    static private $_instance;
+    static private $_connectRedis;
+    private function __construct()
+    {
+    }
+    static public function getInstance(){
+        if(!self::$_instance){
+            self::$_instance = new self();
+        }
+        return self::$_instance;
+    }
+
+    public function redis(){
+        if (!self::$_connectRedis instanceof self){
+            $redis = new Redis();
+            $redis->connect('127.0.0.1');
+            $redis->select(2);
+            self::$_connectRedis = $redis;
+        }
+        return self::$_connectRedis;
+    }
+    public function setA($key,$val){
+        self::$_connectRedis->set($key,$val);
+    }
+
+}
+
+//$a = new A();
 
 //echo $a->add('adADf')->setA()->getA();
 
 
 //$f = new Fork();
-$i = 10;
+//$i = 10;
+//require __DIR__.'/../vendor/autoload.php';
+//Resque::setBackend('127.0.0.1:6379',1);
+//
+//$args = array(
+//    'time' => time(),
+//    'array' => array(
+//        'test' => 'test',
+//    ),
+//);
+//$jobId = Resque::enqueue('default','PHP_Job', $args, true);
+
+$cache = Cache::getInstance()->redis();
+
+//$cache->set('aa','ds',1000);
+echo $cache->get('aa');
